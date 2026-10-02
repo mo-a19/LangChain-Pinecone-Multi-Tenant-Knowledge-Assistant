@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+    :root {
+        --bg: #FAF9F6; /* Soft paper */
+        --bg-secondary: #F2F1EC; 
+        --bg-tertiary: #E9E8E2; 
+        --text: #222222; 
+        --text-secondary: #5C5C5C;
+        --text-tertiary: #8B8B8B;
+        --border: #D8D6CE; 
+        --border-light: #E7E6E1;
+        --accent: #1A1A1A; /* retro dark */
+        --accent-light: #3A3A3A;
+        --success: #0B7A56;
+        --error: #B71C1C;
+        --warning: #C57F1E;
+        --primary: #1A1A1A;
+        --primary-hover: #3A3A3A;
+    }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .slide-in { animation: slideInLeft 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+        /* NAVBAR */
+        .navbar {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .nav-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-logout {
+            color: var(--error);
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-logout:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        .nav-logout::after {
+            display: none;
+        }
+
+        /* MAIN */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2.5rem;
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* HEADER */
+        .header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.8px;
+            color: var(--accent);
+        }
+
+        .header-content p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .header-action {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1.5px solid var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* FORMS */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--bg);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* AUTH */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+
+        .auth-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .toggle-auth {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .toggle-auth button {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .toggle-auth button:hover {
+            opacity: 0.7;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* STAT CARDS */
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-subtext {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        /* DOCUMENTS */
+        .doc-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .doc-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .doc-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .doc-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .doc-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--accent);
+            stroke-width: 1.5;
+        }
+
+        .doc-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .doc-type {
+            display: inline-block;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .doc-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: auto;
+            margin-bottom: 1rem;
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+        }
+
+        .doc-actions .btn {
+            flex: 1;
+            text-align: center;
+            justify-content: center;
+        }
+
+        /* EMPTY STATE */
+        .empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .empty-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--text-tertiary);
+            stroke-width: 1.5;
+        }
+
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .empty-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* TYPE SELECTOR */
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .type-btn {
+            padding: 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: inherit;
+            font-weight: 500;
+        }
+
+        .type-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .type-btn.active {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .type-btn svg {
+            width: 32px;
+            height: 32px;
+            display: block;
+            margin: 0 auto 0.75rem;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .type-btn.active svg {
+            stroke: white;
+        }
+
+        .type-btn span {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Q&A / FAQ */
+        .pair-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pair-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .pair-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pair-remove {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .pair-remove:hover {
+            background: #dc2626;
+        }
+
+        .pair-content {
+            margin-top: 2.5rem;
+        }
+
+        .pair-content input,
+        .pair-content textarea {
+            margin-bottom: 1rem;
+        }
+
+        /* IMAGE PREVIEW */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .image-item {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: background 0.3s ease;
+        }
+
+        .image-remove:hover {
+            background: #dc2626;
+        }
+
+        /* CHAT */
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .chat-window {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--bg);
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            max-width: 70%;
+            padding: 0.875rem 1.25rem;
+            border-radius: 10px;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .chat-message.user .message-bubble {
+            background: var(--accent);
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .chat-message.bot .message-bubble {
+            background: var(--bg-secondary);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 4px 16px 16px 16px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .chat-input input {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .chat-input button {
+            width: auto;
+        }
+
+        /* SUMMARY SIDE PANEL */
+        .summary-panel {
+            position: fixed;
+            top: 72px; /* below navbar */
+            right: -520px; /* hidden by default */
+            height: calc(100% - 92px);
+            width: 38%;
+            max-width: 520px;
+            min-width: 320px;
+            background: linear-gradient(180deg, var(--bg) 0%, #ffffff 100%);
+            border-left: 1px solid var(--border);
+            box-shadow: -24px 0 40px rgba(16, 24, 40, 0.06);
+            border-radius: 12px 0 0 12px;
+            padding: 1rem 1rem 1.5rem 1rem;
+            z-index: 150;
+            transition: right 0.36s cubic-bezier(.2,.9,.2,1), opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        /* panel visible */
+        .summary-panel.open {
+            right: 24px;
+            opacity: 1;
+        }
+
+        /* header */
+        .summary-panel .summary-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.5rem;
+        }
+
+        .summary-panel .summary-title {
+            display:flex;
+            gap:0.6rem;
+            align-items:center;
+        }
+
+        .summary-panel h3 {
+            font-size: 1.05rem;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .summary-panel .summary-meta {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        /* content */
+        .summary-panel .summary-body {
+            overflow-y: auto;
+            padding: 0.75rem 0;
+            gap: 0.75rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-panel .summary-content {
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        /* skeleton */
+        .summary-skeleton {
+            height: 120px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.03) 100%);
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        /* footer actions */
+        .summary-panel .summary-actions {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-light);
+            padding-top: 0.6rem;
+            margin-top: 0.35rem;
+        }
+
+        .summary-panel .summary-actions .left,
+        .summary-panel .summary-actions .right {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .summary-panel .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 0.55rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .summary-panel .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* insert into chat button */
+        .summary-panel .btn-insert {
+            background: var(--primary);
+            color: white;
+            padding: 0.55rem 0.8rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* close icon */
+        .summary-panel .icon-btn {
+            width: 36px;
+            height: 36px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:8px;
+            border:1px solid var(--border);
+            background:var(--bg);
+            cursor:pointer;
+        }
+
+        /* responsive */
+        @media (max-width: 900px) {
+            .summary-panel {
+                width: 100%;
+                max-width: 100%;
+                right: -100%;
+                top: 64px;
+                border-radius: 0;
+            }
+            .summary-panel.open {
+                right: 0;
+            }
+        }
+
+
+        /* ALERTS */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            font-size: 0.9rem;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border-left-color: var(--success);
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #7f1d1d;
+            border-left-color: var(--error);
+        }
+
+        /* LOADING */
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(3px);
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 200;
+            animation: slideInLeft 0.3s ease-out;
+            font-size: 0.9rem;
+        }
+
+        .toast-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .toast-error {
+            background: var(--error);
+            color: white;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .header-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-items {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .grid-2, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stat-icon {
+                width: 48px;
+                height: 48px;
+            }
+
+            .type-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chat-box {
+                height: 400px;
+            }
+
+            .toast {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+
+            .message-bubble {
+                max-width: 100%;
+            }
+        }
+
+        /* ===== MARKDOWN STYLES ===== */
+        .markdown-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* Headings */
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3,
+        .markdown-content h4,
+        .markdown-content h5,
+        .markdown-content h6 {
+            font-weight: 700;
+            margin: 0.75rem 0 0.5rem 0;
+            line-height: 1.3;
+            color: var(--accent);
+        }
+
+        .markdown-content h1 {
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.3rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.35rem;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.15rem;
+        }
+
+        .markdown-content h4 {
+            font-size: 1rem;
+        }
+
+        .markdown-content h5,
+        .markdown-content h6 {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Paragraphs */
+        .markdown-content p {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        /* Lists */
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 0.75rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .markdown-content li {
+            margin: 0.35rem 0;
+            line-height: 1.6;
+        }
+
+        .markdown-content ul li:before {
+            content: "▸ ";
+            color: var(--accent);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .markdown-content ol {
+            list-style-type: decimal;
+            padding-left: 1.75rem;
+        }
+
+        .markdown-content ol li {
+            color: var(--text);
+        }
+
+        /* Bold & Italic */
+        .markdown-content strong,
+        .markdown-content b {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .markdown-content em,
+        .markdown-content i {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        /* Code inline */
+        .markdown-content code {
+            background: var(--bg-tertiary);
+            color: var(--accent);
+            padding: 0.2rem 0.45rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Code blocks */
+        .markdown-content pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+        }
+
+        .markdown-content pre code {
+            background: none;
+            color: var(--text);
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* Blockquotes */
+        .markdown-content blockquote {
+            border-left: 4px solid var(--accent);
+            background: rgba(26, 26, 26, 0.03);
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .markdown-content blockquote p {
+            margin: 0;
+        }
+
+        /* Horizontal rule */
+        .markdown-content hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: 1rem 0;
+        }
+
+        /* Links */
+        .markdown-content a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .markdown-content a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Tables */
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.9rem;
+        }
+
+        .markdown-content table th {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .markdown-content table td {
+            border: 1px solid var(--border-light);
+            padding: 0.75rem;
+        }
+
+        .markdown-content table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Strikethrough */
+        .markdown-content del {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        /* Nested lists */
+        .markdown-content ul ul,
+        .markdown-content ul ol,
+        .markdown-content ol ul,
+        .markdown-content ol ol {
+            margin: 0.35rem 0 0.35rem 1rem;
+        }
+
+        /* Images */
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin: 0.75rem 0;
+        }
+
+        /* Improved message bubble styling for markdown */
+        .message-bubble {
+            overflow-x: hidden;
+        }
+
+        .chat-message.bot .message-bubble .markdown-content {
+            gap: 0.35rem;
+        }
+
+        /* Syntax highlighting for code blocks (optional enhancement) */
+        .markdown-content .hljs {
+            background: var(--bg-tertiary) !important;
+        }
+
+        /* Better spacing for checkboxes if markdown contains task lists */
+        .markdown-content input[type="checkbox"] {
+            margin-right: 0.5rem;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-wrapper">
+        <div class="nav-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            Knowledge Hub
+        </div>
+        <div id="navActions" class="nav-items" style="display: none;">
+            <button class="nav-link" onclick="switchView('dashboard')">Dashboard</button>
+            <button class="nav-link" onclick="switchView('upload')">Upload</button>
+            <button class="nav-link" onclick="switchView('chat')">Chat</button>
+            <button id="logoutBtn" class="nav-logout nav-link">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTAINER -->
+<div class="container">
+
+    <!-- AUTH -->
+    <section id="authSection" class="active">
+        <div class="auth-container fade-in">
+            <div class="auth-box">
+                <!-- LOGIN -->
+                <div id="loginCard" class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="auth-title">Welcome Back</div>
+                        <div class="auth-subtitle">Sign in to your knowledge base</div>
+                    </div>
+
+                    <div id="authError" class="hidden alert alert-error" style="display: none;"></div>
+
+                    <form id="loginForm" class="space-y-4">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input id="loginEmail" type="email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input id="loginPassword" type="password" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                    </form>
+
+                    <hr class="divider">
+
+                    <div class="toggle-auth">
+                        New here? <button onclick="showRegister()">Create an account</button>
+                    </div>
+                </div>
+
+                <!-- REGISTER -->
+                <div id="registerCard" class="auth-card" style="display: none;">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="auth-title">Get Started</div>
+                        <div class="auth-subtitle">Create your account</div>
+                    </div>
+
+                    <form id="registerForm" class="space-y-4">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input id="regEmail" type="email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input id="regPassword" type="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name <span style="color: var(--text-tertiary);">(optional)</span></label>
+                            <input id="regName" type="text" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Company <span style="color: var(--text-tertiary);">(optional)</span></label>
+                            <input id="regCompany" type="text" placeholder="Your Company">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                    </form>
+
+                    <hr class="divider">
+
+                    <div class="toggle-auth">
+                        Already have an account? <button onclick="hideRegister()">Sign in</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboardView">
+        <div class="header slide-in">
+            <div class="header-content">
+                <h1>Dashboard</h1>
+                <p>Overview of your knowledge base</p>
+            </div>
+            <div class="header-action">
+                <button onclick="switchView('upload')" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14M5 12h14"></path>
+                    </svg>
+                    Upload
+                </button>
+            </div>
+        </div>
+
+        <!-- STATS SECTION -->
+        <div class="grid grid-3" id="statsGrid">
+            <div class="card stat-card">
+                <div class="stat-icon" style="background: rgba(26, 26, 26, 0.1);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Documents</div>
+                    <div class="stat-value" id="statDocs">0</div>
+                    <div class="stat-subtext">Knowledge base size</div>
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-icon" style="background: rgba(11, 122, 86, 0.1);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Queries Today</div>
+                    <div class="stat-value" id="statQueries">0</div>
+                    <div class="stat-subtext">Chat interactions</div>
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-icon" style="background: rgba(197, 127, 30, 0.1);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m2.12 2.12l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m2.12-2.12l4.24-4.24M19.78 19.78l-4.24-4.24m-2.12-2.12l-4.24-4.24"></path>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Smart Search</div>
+                    <div class="stat-value" id="statSmartSearch">Ready</div>
+                    <div class="stat-subtext">AI-powered Q&A</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOCUMENTS BY TYPE -->
+        <div class="card">
+            <h2 style="margin-bottom: 1.5rem;">Content Breakdown</h2>
+            <div id="typeBreakdown" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--accent);">
+                    <span style="font-weight: 500; font-size: 0.95rem;">PDF Documents</span>
+                    <span id="type-pdf" style="font-weight: 700; font-size: 1.1rem; color: var(--accent);">0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--success);">
+                    <span style="font-weight: 500; font-size: 0.95rem;">Images</span>
+                    <span id="type-images" style="font-weight: 700; font-size: 1.1rem; color: var(--success);">0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--warning);">
+                    <span style="font-weight: 500; font-size: 0.95rem;">Q&A Pairs</span>
+                    <span id="type-qna" style="font-weight: 700; font-size: 1.1rem; color: var(--warning);">0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid var(--text-secondary);">
+                    <span style="font-weight: 500; font-size: 0.95rem;">FAQ Items</span>
+                    <span id="type-faq" style="font-weight: 700; font-size: 1.1rem; color: var(--text-secondary);">0</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 2rem; margin-bottom: 1rem;">Recent Documents</h2>
+        <div id="docList" class="card" style="overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;" id="docTable">
+                <thead style="background: var(--bg-secondary); border-bottom: 1px solid var(--border);">
+                    <tr>
+                        <th style="padding: 1rem; text-align: left; font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Filename</th>
+                        <th style="padding: 1rem; text-align: left; font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Type</th>
+                        <th style="padding: 1rem; text-align: center; font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Chunks</th>
+                        <th style="padding: 1rem; text-align: right; font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="docTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="emptyDocs" class="card empty" style="display: none;">
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            <div class="empty-title">No documents yet</div>
+            <div class="empty-text">Start by uploading your first document to build your knowledge base</div>
+            <button onclick="switchView('upload')" class="btn btn-primary">Upload Document</button>
+        </div>
+    </section>
+
+    <!-- UPLOAD -->
+    <section id="uploadView">
+        <div class="header slide-in">
+            <div class="header-content">
+                <h1>Upload Documents</h1>
+                <p>Choose a document type and upload your content</p>
+            </div>
+        </div>
+
+        <!-- TYPE SELECTOR -->
+        <div class="type-selector">
+            <button class="type-btn active" onclick="selectType('pdf')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <text x="8" y="18" font-size="8" fill="currentColor">PDF</text>
+                </svg>
+                <span>PDF</span>
+            </button>
+            <button class="type-btn" onclick="selectType('images')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>Images</span>
+            </button>
+            <button class="type-btn" onclick="selectType('qna')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    <circle cx="9" cy="10" r="1"></circle>
+                    <circle cx="12" cy="10" r="1"></circle>
+                    <circle cx="15" cy="10" r="1"></circle>
+                </svg>
+                <span>Q&A</span>
+            </button>
+            <button class="type-btn" onclick="selectType('faq')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
+                    <text x="10" y="16" font-size="8" fill="currentColor">?</text>
+                </svg>
+                <span>FAQ</span>
+            </button>
+        </div>
+
+        <!-- PDF -->
+        <div id="pdfSection" class="card">
+            <h2>Upload PDF Document</h2>
+            <form id="pdfForm">
+                <div class="form-group">
+                    <label>Select PDF File</label>
+                    <input id="pdfFile" type="file" accept=".pdf" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload PDF</button>
+            </form>
+            <div id="pdfResult" class="hidden"></div>
+        </div>
+
+        <!-- IMAGES -->
+        <div id="imagesSection" class="card" style="display: none;">
+            <h2>Upload Images</h2>
+            <form id="imagesForm">
+                <div class="form-group">
+                    <label>Select Images</label>
+                    <input id="imagesFile" type="file" accept="image/*" multiple required>
+                </div>
+                <div id="imagePreview" class="image-grid" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary">Upload Images</button>
+            </form>
+            <div id="imagesResult" class="hidden"></div>
+        </div>
+
+        <!-- Q&A -->
+        <div id="qnaSection" class="card" style="display: none;">
+            <h2>Add Question & Answer Pairs</h2>
+            <div id="qnaContainer"></div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" onclick="addQnaPair()" class="btn btn-secondary">+ Add Pair</button>
+                <button type="button" onclick="submitQna()" class="btn btn-primary">Submit Q&A</button>
+            </div>
+            <div id="qnaResult" class="hidden" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faqSection" class="card" style="display: none;">
+            <h2>Add FAQ Items</h2>
+            <div class="form-group">
+                <label>Category</label>
+                <input id="faqCategory" type="text" placeholder="e.g., General, Billing, Support">
+            </div>
+            <div id="faqContainer"></div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" onclick="addFaqItem()" class="btn btn-secondary">+ Add Item</button>
+                <button type="button" onclick="submitFaq()" class="btn btn-primary">Submit FAQ</button>
+            </div>
+            <div id="faqResult" class="hidden" style="margin-top: 1rem;"></div>
+        </div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chatView">
+        <div class="header slide-in">
+            <div class="header-content">
+                <h1>Chat with Your Knowledge Base</h1>
+                <p>Ask questions and get instant answers from your documents</p>
+            </div>
+
+            <!-- SUMMARY BUTTON -->
+            <button id="summaryBtn" class="btn btn-secondary" style="margin-left:auto;">
+                Summarize Chat
+            </button>
+        </div>
+
+        <div class="chat-box">
+            <div id="chatWindow" class="chat-window"></div>
+            <div class="chat-input">
+                <input id="chatInput" type="text" placeholder="Ask something about your documents...">
+                <button id="sendBtn" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    Send
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- SUMMARY SIDE PANEL -->
+    <div id="summaryPanel" class="summary-panel" aria-hidden="true">
+        <div class="summary-header">
+            <div class="summary-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <div>
+                    <h3>Conversation Summary</h3>
+                    <div id="summaryMeta" class="summary-meta">No conversation selected</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+                <button id="pinSummaryBtn" class="icon-btn" title="Pin (not implemented)">
+                    <!-- pin icon -->
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v7"></path><path d="M8 7h8"></path><path d="M7 21l10-10"></path></svg>
+                </button>
+                <button id="closeSummaryBtn" class="icon-btn" title="Close">
+                    <!-- close -->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="summary-body">
+            <div id="summaryContentPlaceholder" class="summary-skeleton"></div>
+            <div id="summaryContent" class="summary-content" style="display:none"></div>
+            <div id="summaryError" class="alert alert-error" style="display:none"></div>
+        </div>
+
+        <div class="summary-actions">
+            <div class="left">
+                <button id="copySummaryBtn" class="btn-ghost" title="Copy summary">Copy</button>
+                <button id="downloadSummaryBtn" class="btn-ghost" title="Download .txt">Download</button>
+            </div>
+            <div class="right">
+                <button id="insertSummaryBtn" class="btn-insert">Insert into chat</button>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay">
+    <div class="loader"></div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+let authToken = sessionStorage.getItem("authToken") || null;
+let currentUser = JSON.parse(sessionStorage.getItem("currentUser")) || null;
+let conversationId = null;
+let qnaCount = 0;
+let faqCount = 0;
+
+// SVG ICONS
+const ICONS = {
+    pdf: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`,
+    images: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`,
+    qna: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><circle cx="9" cy="10" r="1"></circle><circle cx="12" cy="10" r="1"></circle><circle cx="15" cy="10" r="1"></circle></svg>`,
+    faq: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><text x="11" y="16" font-size="10" fill="currentColor">?</text></svg>`,
+    delete: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`
+};
+
+// UTILS
+function showToast(msg, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function showLoading(show) {
+    document.getElementById('overlay').classList.toggle('active', show);
+}
+
+function switchView(view) {
+    if (!authToken && view !== 'auth') {
+        showToast('Please login first', 'error');
+        return;
+    }
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(view + 'View').classList.add('active');
+    if (view === 'dashboard') loadDocuments();
+}
+
+function showRegister() {
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('registerCard').style.display = 'block';
+}
+
+function hideRegister() {
+    document.getElementById('registerCard').style.display = 'none';
+    document.getElementById('loginCard').style.display = 'block';
+}
+
+// AUTH
+const authError = document.getElementById('authError');
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showLoading(true);
+
+    try {
+        const res = await fetch(`${API}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Login failed');
+
+        authToken = data.access_token;
+        currentUser = { email: data.email, user_id: data.user_id, workspace_id: data.workspace_id };
+        sessionStorage.setItem('authToken', authToken);
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        authError.style.display = 'none';
+        document.getElementById('authSection').classList.remove('active');
+        document.getElementById('navActions').style.display = 'flex';
+        showToast('✓ Login successful');
+        switchView('dashboard');
+    } catch (err) {
+        authError.textContent = err.message;
+        authError.style.display = 'block';
+    } finally {
+        showLoading(false);
+    }
+});
+
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showLoading(true);
+
+    try {
+        const res = await fetch(`${API}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                name: document.getElementById('regName').value || undefined,
+                company_name: document.getElementById('regCompany').value || undefined
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Registration failed');
+
+        authToken = data.access_token;
+        currentUser = { email: data.email, user_id: data.user_id, workspace_id: data.workspace_id };
+        sessionStorage.setItem('authToken', authToken);
+        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        authError.style.display = 'none';
+        document.getElementById('authSection').classList.remove('active');
+        document.getElementById('navActions').style.display = 'flex';
+        showToast('✓ Account created');
+        switchView('dashboard');
+    } catch (err) {
+        authError.textContent = err.message;
+        authError.style.display = 'block';
+    } finally {
+        showLoading(false);
+    }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    authToken = null;
+    currentUser = null;
+    sessionStorage.clear();
+    showToast('Logged out');
+    setTimeout(() => location.reload(), 500);
+});
+
+// DASHBOARD
+async function loadDocuments() {
+    const docTableBody = document.getElementById('docTableBody');
+    docTableBody.innerHTML = '<tr><td colspan="4" style="padding: 2rem; text-align: center;"><div class="loader"></div></td></tr>';
+
+    const types = ['pdf', 'images', 'qna', 'faq'];
+    let docs = [];
+
+    for (const type of types) {
+        try {
+            const res = await fetch(`${API}/api/knowledge-hub/ingest/${type}/list`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const items = Array.isArray(data) ? data : (data.documents || []);
+                docs = docs.concat(items.map(d => ({ ...d, type })));
+            }
+        } catch (err) {
+            console.error(`Error loading ${type}:`, err);
+        }
+    }
+
+    // Update Content Breakdown with actual counts from loaded documents
+    const pdfCount = docs.filter(d => d.type === 'pdf').length;
+    const imagesCount = docs.filter(d => d.type === 'images').length;
+    const qnaCount = docs.filter(d => d.type === 'qna').length;
+    const faqCount = docs.filter(d => d.type === 'faq').length;
+    
+    document.getElementById('type-pdf').textContent = pdfCount;
+    document.getElementById('type-images').textContent = imagesCount;
+    document.getElementById('type-qna').textContent = qnaCount;
+    document.getElementById('type-faq').textContent = faqCount;
+    
+    // Update top stat cards
+    const totalDocs = docs.length;
+    document.getElementById('statDocs').textContent = totalDocs;
+    
+    // Try to load queries from stats endpoint
+    try {
+        const statsRes = await fetch(`${API}/api/rag/workspace/stats`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (statsRes.ok) {
+            const stats = await statsRes.json();
+            document.getElementById('statQueries').textContent = stats.queries_today || 0;
+        }
+    } catch (err) {
+        console.error('Error loading query stats:', err);
+        document.getElementById('statQueries').textContent = '0';
+    }
+
+    docTableBody.innerHTML = '';
+    if (docs.length === 0) {
+        document.getElementById('emptyDocs').style.display = 'block';
+        document.getElementById('docList').style.display = 'none';
+        return;
+    }
+    document.getElementById('emptyDocs').style.display = 'none';
+    document.getElementById('docList').style.display = 'block';
+
+    // Show most recent documents (limit to 10)
+    docs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10).forEach(doc => {
+        const filename = doc.filename || doc.document_id || doc.id || 'Unknown';
+        const typeLabel = doc.type.toUpperCase();
+        const chunks = doc.total_chunks || 0;
+        const docId = doc.document_id || doc.id;
+        
+        const typeColors = {
+            'pdf': 'var(--accent)',
+            'images': 'var(--success)',
+            'qna': 'var(--warning)',
+            'faq': 'var(--text-secondary)'
+        };
+        
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid var(--border-light)';
+        row.style.transition = 'background 0.2s';
+        row.onmouseover = () => row.style.background = 'var(--bg-secondary)';
+        row.onmouseout = () => row.style.background = 'transparent';
+        
+        row.innerHTML = `
+            <td style="padding: 1rem; font-weight: 500; color: var(--text);">${filename}</td>
+            <td style="padding: 1rem;">
+                <span style="display: inline-block; padding: 0.4rem 0.8rem; background: ${typeColors[doc.type]}20; color: ${typeColors[doc.type]}; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">${typeLabel}</span>
+            </td>
+            <td style="padding: 1rem; text-align: center; color: var(--text-secondary);">${chunks}</td>
+            <td style="padding: 1rem; text-align: right;">
+                <button onclick="deleteDoc('${doc.type}', '${docId}')" class="btn btn-danger btn-small" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Delete</button>
+            </td>
+        `;
+        docTableBody.appendChild(row);
+    });
+}
+
+async function deleteDoc(type, id) {
+    if (!confirm('Delete this document? This action cannot be undone.')) return;
+    showLoading(true);
+    try {
+        const res = await fetch(`${API}/api/knowledge-hub/ingest/${type}/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.ok) {
+            showToast('Document deleted successfully');
+            loadDocuments();
+        } else {
+            showToast('Error deleting document', 'error');
+        }
+    } catch (err) {
+        showToast('Error deleting document', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// UPLOAD
+function selectType(type) {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    event.target.closest('.type-btn').classList.add('active');
+    document.querySelectorAll('[id$="Section"]').forEach(s => s.style.display = 'none');
+    document.getElementById(type + 'Section').style.display = 'block';
+}
+
+// PDF
+document.getElementById('pdfForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const file = document.getElementById('pdfFile').files[0];
+    if (!file) { showToast('Select PDF', 'error'); return; }
+    
+    showLoading(true);
+    const form = new FormData();
+    form.append('file', file);
+    
+    try {
+        const res = await fetch(`${API}/api/knowledge-hub/ingest/pdf`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${authToken}` },
+            body: form
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Failed');
+        
+        showToast('✓ PDF uploaded successfully');
+        document.getElementById('pdfForm').reset();
+        setTimeout(() => switchView('dashboard'), 1000);
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+});
+
+// IMAGES
+document.getElementById('imagesFile')?.addEventListener('change', (e) => {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const item = document.createElement('div');
+            item.className = 'image-item';
+            item.innerHTML = `<img src="${ev.target.result}">`;
+            preview.appendChild(item);
+        };
+        reader.readAsDataURL(file);
+    });
+    preview.style.display = preview.children.length > 0 ? 'grid' : 'none';
+});
+
+document.getElementById('imagesForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const files = document.getElementById('imagesFile').files;
+    if (files.length === 0) { showToast('Select images', 'error'); return; }
+    
+    showLoading(true);
+    const form = new FormData();
+    Array.from(files).forEach(f => form.append('files', f));
+    
+    try {
+        const res = await fetch(`${API}/api/knowledge-hub/ingest/images`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${authToken}` },
+            body: form
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Failed');
+        
+        showToast(`✓ ${files.length} images uploaded`);
+        document.getElementById('imagesForm').reset();
+        document.getElementById('imagePreview').style.display = 'none';
+        setTimeout(() => switchView('dashboard'), 1000);
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+});
+
+// Q&A
+function addQnaPair() {
+    qnaCount++;
+    const container = document.getElementById('qnaContainer');
+    const item = document.createElement('div');
+    item.className = 'pair-item qna-item';
+    item.id = `qna-${qnaCount}`;
+    item.innerHTML = `
+        <button type="button" class="pair-remove" onclick="document.getElementById('qna-${qnaCount}').remove()">Remove</button>
+        <div class="pair-number">Q&A #${qnaCount}</div>
+        <div class="pair-content">
+            <input type="text" placeholder="Enter your question (min 3 characters)" class="qna-q" required minlength="3">
+            <textarea placeholder="Enter the answer (min 5 characters)" class="qna-a" required minlength="5" rows="3"></textarea>
+        </div>
+    `;
+    container.appendChild(item);
+}
+
+function submitQna() {
+    const items = document.querySelectorAll('.qna-item');
+    if (items.length === 0) { showToast('Add at least one Q&A pair', 'error'); return; }
+    
+    const data = [];
+    let hasError = false;
+    
+    Array.from(items).forEach((item, index) => {
+        const question = item.querySelector('.qna-q').value.trim();
+        const answer = item.querySelector('.qna-a').value.trim();
+        
+        if (question.length < 3) {
+            showToast(`Q&A #${index + 1}: Question must be at least 3 characters`, 'error');
+            hasError = true;
+            return;
+        }
+        if (answer.length < 5) {
+            showToast(`Q&A #${index + 1}: Answer must be at least 5 characters`, 'error');
+            hasError = true;
+            return;
+        }
+        
+        data.push({ question, answer });
+    });
+    
+    if (hasError || data.length === 0) return;
+
+    uploadQna(data);
+}
+
+async function uploadQna(data) {
+    showLoading(true);
+    
+    try {
+        const res = await fetch(`${API}/api/knowledge-hub/ingest/qna`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify({
+                qna_pairs: data.map(item => ({
+                    question: item.question,
+                    answer: item.answer,
+                    category: "General"
+                }))
+            })
+        });
+        const resp = await res.json();
+        if (!res.ok) {
+            // Handle Pydantic validation errors
+            let errorMsg = 'Failed';
+            if (resp.detail) {
+                if (Array.isArray(resp.detail)) {
+                    errorMsg = resp.detail.map(e => e.msg || e.message || JSON.stringify(e)).join(', ');
+                } else if (typeof resp.detail === 'string') {
+                    errorMsg = resp.detail;
+                } else {
+                    errorMsg = JSON.stringify(resp.detail);
+                }
+            }
+            throw new Error(errorMsg);
+        }
+        
+        showToast(`✓ ${data.length} Q&A pairs uploaded`);
+        document.getElementById('qnaContainer').innerHTML = '';
+        qnaCount = 0;
+        setTimeout(() => switchView('dashboard'), 1000);
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// FAQ
+function addFaqItem() {
+    faqCount++;
+    const container = document.getElementById('faqContainer');
+    const item = document.createElement('div');
+    item.className = 'pair-item faq-item';
+    item.id = `faq-${faqCount}`;
+    item.innerHTML = `
+        <button type="button" class="pair-remove" onclick="document.getElementById('faq-${faqCount}').remove()">Remove</button>
+        <div class="pair-number">FAQ #${faqCount}</div>
+        <div class="pair-content">
+            <input type="text" placeholder="Enter your question (min 3 characters)" class="faq-q" required minlength="3">
+            <textarea placeholder="Enter the answer (min 5 characters)" class="faq-a" required minlength="5" rows="3"></textarea>
+        </div>
+    `;
+    container.appendChild(item);
+}
+
+function submitFaq() {
+    const items = document.querySelectorAll('.faq-item');
+    if (items.length === 0) { showToast('Add at least one FAQ item', 'error'); return; }
+    
+    const data = [];
+    let hasError = false;
+    
+    Array.from(items).forEach((item, index) => {
+        const question = item.querySelector('.faq-q').value.trim();
+        const answer = item.querySelector('.faq-a').value.trim();
+        
+        if (question.length < 3) {
+            showToast(`FAQ #${index + 1}: Question must be at least 3 characters`, 'error');
+            hasError = true;
+            return;
+        }
+        if (answer.length < 5) {
+            showToast(`FAQ #${index + 1}: Answer must be at least 5 characters`, 'error');
+            hasError = true;
+            return;
+        }
+        
+        data.push({ question, answer });
+    });
+    
+    if (hasError || data.length === 0) return;
+    
+    const category = document.getElementById('faqCategory').value.trim() || 'General';
+
+    uploadFaq(data, category);
+}
+
+async function uploadFaq(data, category) {
+    showLoading(true);
+    
+    try {
+        const res = await fetch(`${API}/api/knowledge-hub/ingest/faq`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify({
+                category: category,
+                faq_items: data.map(item => ({
+                    question: item.question,
+                    answer: item.answer
+                }))
+            })
+        });
+        const resp = await res.json();
+        if (!res.ok) {
+            // Handle Pydantic validation errors
+            let errorMsg = 'Failed';
+            if (resp.detail) {
+                if (Array.isArray(resp.detail)) {
+                    errorMsg = resp.detail.map(e => e.msg || e.message || JSON.stringify(e)).join(', ');
+                } else if (typeof resp.detail === 'string') {
+                    errorMsg = resp.detail;
+                } else {
+                    errorMsg = JSON.stringify(resp.detail);
+                }
+            }
+            throw new Error(errorMsg);
+        }
+        
+        showToast(`✓ ${data.length} FAQ items uploaded`);
+        document.getElementById('faqContainer').innerHTML = '';
+        document.getElementById('faqCategory').value = '';
+        faqCount = 0;
+        setTimeout(() => switchView('dashboard'), 1000);
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// CHAT
+document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
+document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+});
+
+async function sendMessage() {
+    const msg = document.getElementById('chatInput').value.trim();
+    if (!msg) return;
+    
+    document.getElementById('chatInput').value = '';
+    const chatWindow = document.getElementById('chatWindow');
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user';
+    userMsg.innerHTML = `<div class="message-bubble">${escapeHtml(msg)}</div>`;
+    chatWindow.appendChild(userMsg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    
+    showLoading(true);
+    try {
+        const res = await fetch(`${API}/api/chat/message`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                message: msg,
+                conversation_id: conversationId,
+                top_k: 5,
+                mode: 'chat'
+            })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Error');
+        
+        conversationId = data.conversation_id;
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot';
+        // Render answer as markdown with enhanced formatting
+        botMsg.innerHTML = `<div class="message-bubble">${renderMarkdown(data.answer)}</div>`;
+        chatWindow.appendChild(botMsg);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    } catch (err) {
+        const errMsg = document.createElement('div');
+        errMsg.className = 'chat-message bot';
+        errMsg.innerHTML = `<div class="message-bubble"><p><strong>Error:</strong> ${escapeHtml(err.message)}</p></div>`;
+        chatWindow.appendChild(errMsg);
+    } finally {
+        showLoading(false);
+    }
+}
+
+// ===== SUMMARY SIDE PANEL HANDLERS =====
+const summaryBtn = document.getElementById('summaryBtn');
+const summaryPanel = document.getElementById('summaryPanel');
+const summaryContent = document.getElementById('summaryContent');
+const summaryPlaceholder = document.getElementById('summaryContentPlaceholder');
+const summaryMeta = document.getElementById('summaryMeta');
+const summaryError = document.getElementById('summaryError');
+const copySummaryBtn = document.getElementById('copySummaryBtn');
+const downloadSummaryBtn = document.getElementById('downloadSummaryBtn');
+const closeSummaryBtn = document.getElementById('closeSummaryBtn');
+const insertSummaryBtn = document.getElementById('insertSummaryBtn');
+
+summaryBtn?.addEventListener('click', async () => {
+    // If no conversation id, tell user to chat first
+    if (!conversationId) {
+        showToast('Start a conversation first to summarize', 'error');
+        return;
+    }
+    openSummaryPanel();
+    await fetchAndRenderSummary(conversationId);
+});
+
+closeSummaryBtn?.addEventListener('click', closeSummaryPanel);
+
+function openSummaryPanel() {
+    summaryPanel.classList.add('open');
+    summaryPanel.setAttribute('aria-hidden', 'false');
+}
+
+function closeSummaryPanel() {
+    summaryPanel.classList.remove('open');
+    summaryPanel.setAttribute('aria-hidden', 'true');
+    // clear transient UI
+    summaryContent.style.display = 'none';
+    summaryPlaceholder.style.display = 'block';
+    summaryError.style.display = 'none';
+    summaryMeta.textContent = 'Fetching summary...';
+}
+
+async function fetchAndRenderSummary(convId) {
+    summaryContent.style.display = 'none';
+    summaryPlaceholder.style.display = 'block';
+    summaryError.style.display = 'none';
+    summaryMeta.textContent = 'Fetching summary...';
+    summaryContent.innerHTML = '';
+
+    showLoading(true);
+    try {
+        const res = await fetch(`${API}/api/chat/summary/${encodeURIComponent(convId)}`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Failed to get summary');
+
+        // render with markdown support
+        const summaryText = (data.summary || '').trim();
+        const total = (data.total_messages !== undefined) ? data.total_messages : (data.total || 'unknown');
+        summaryMeta.textContent = `Conversation ID: ${convId} • ${total} messages`;
+        
+        // Render summary as markdown for rich formatting
+        if (summaryText) {
+            summaryContent.innerHTML = renderMarkdown(summaryText);
+        } else {
+            summaryContent.innerHTML = '<p><em>No summary returned.</em></p>';
+        }
+        
+        summaryPlaceholder.style.display = 'none';
+        summaryContent.style.display = 'block';
+    } catch (err) {
+        summaryError.style.display = 'block';
+        summaryError.textContent = `Unable to fetch summary: ${err.message}`;
+        summaryMeta.textContent = 'Summary failed';
+        summaryPlaceholder.style.display = 'none';
+        summaryContent.style.display = 'none';
+    } finally {
+        showLoading(false);
+    }
+}
+
+/**
+ * Extract plain text from markdown content HTML
+ */
+function getTextFromMarkdownContent() {
+    if (!summaryContent.innerHTML) return '';
+    
+    // Create a temporary div to parse HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = summaryContent.innerHTML;
+    
+    // Extract text from markdown content
+    let text = '';
+    const elements = temp.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6, blockquote, code, pre');
+    elements.forEach(el => {
+        if (el.textContent.trim()) {
+            text += el.textContent.trim() + '\n';
+        }
+    });
+    
+    return text.trim() || summaryContent.textContent || '';
+}
+
+copySummaryBtn?.addEventListener('click', async () => {
+    const text = getTextFromMarkdownContent();
+    if (!text) { showToast('Nothing to copy', 'error'); return; }
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Summary copied ✓');
+    } catch (e) {
+        showToast('Copy failed', 'error');
+    }
+});
+
+downloadSummaryBtn?.addEventListener('click', () => {
+    const text = getTextFromMarkdownContent();
+    if (!text) { showToast('Nothing to download', 'error'); return; }
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safeId = (conversationId || 'summary').replace(/[^a-z0-9_-]/ig, '_');
+    a.download = `conversation_summary_${safeId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast('Summary downloaded ✓');
+});
+
+insertSummaryBtn?.addEventListener('click', () => {
+    // insert summary into chat as bot message
+    const text = getTextFromMarkdownContent();
+    if (!text) { showToast('No summary to insert', 'error'); return; }
+
+    // create bot-like message bubble with markdown
+    const chatWindow = document.getElementById('chatWindow');
+    const botMsg = document.createElement('div');
+    botMsg.className = 'chat-message bot';
+    botMsg.innerHTML = `<div class="message-bubble">${renderMarkdown(text)}</div>`;
+    chatWindow.appendChild(botMsg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    closeSummaryPanel();
+    showToast('Summary inserted into chat ✓');
+});
+
+// small helper to avoid injecting raw HTML
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+// ===== MARKDOWN RENDERING =====
+let markdownReady = false;
+
+/**
+ * Initialize marked when library loads
+ */
+function initializeMarkdown() {
+    if (typeof marked === 'undefined') {
+        console.warn('marked.js not loaded yet');
+        return;
+    }
+    
+    marked.setOptions({
+        breaks: true,
+        gfm: true,
+    });
+
+    const renderer = new marked.Renderer();
+    renderer.heading = ({ text, depth }) => `<h${depth}>${text}</h${depth}>`;
+    renderer.list = ({ items, ordered }) => {
+        const tag = ordered ? 'ol' : 'ul';
+        const content = items.map(item => `<li>${item.text}</li>`).join('');
+        return `<${tag}>${content}</${tag}>`;
+    };
+    renderer.blockquote = ({ text }) => `<blockquote>${text}</blockquote>`;
+    renderer.codespan = (code) => `<code>${escapeHtml(code)}</code>`;
+    renderer.code = ({ text, lang }) => `<pre><code class="language-${lang || 'plain'}">${escapeHtml(text)}</code></pre>`;
+    renderer.table = ({ header, rows }) => `<table><thead>${header}</thead><tbody>${rows}</tbody></table>`;
+    marked.setOptions({ renderer });
+    markdownReady = true;
+}
+
+/**
+ * Render markdown to HTML with safe sanitization
+ */
+function renderMarkdown(markdown) {
+    if (!markdownReady) {
+        initializeMarkdown();
+    }
+    
+    if (typeof marked === 'undefined') {
+        return `<div class="markdown-content"><p>${escapeHtml(markdown)}</p></div>`;
+    }
+    
+    try {
+        const html = marked.parse(markdown);
+        return `<div class="markdown-content">${html}</div>`;
+    } catch (error) {
+        console.error('Markdown parsing error:', error);
+        return `<div class="markdown-content"><p>${escapeHtml(markdown)}</p></div>`;
+    }
+}
+
+// INIT
+if (authToken && currentUser) {
+    document.getElementById('authSection').classList.remove('active');
+    document.getElementById('navActions').style.display = 'flex';
+    switchView('dashboard');
+}
+
+// Load markdown library asynchronously to avoid blocking page
+const script = document.createElement('script');
+script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+script.async = true;
+script.onload = () => {
+    initializeMarkdown();
+};
+script.onerror = () => {
+    console.warn('Failed to load marked.js - markdown formatting will be disabled');
+};
+document.head.appendChild(script);
+</script>
+
+</body>
+</html>
